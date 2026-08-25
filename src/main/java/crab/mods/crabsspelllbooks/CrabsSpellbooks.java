@@ -1,6 +1,7 @@
 package crab.mods.crabsspelllbooks;
 
 import com.mojang.logging.LogUtils;
+import crab.mods.crabsspelllbooks.registry.ItemRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -73,6 +74,8 @@ public class CrabsSpellbooks {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        ItemRegistry.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
