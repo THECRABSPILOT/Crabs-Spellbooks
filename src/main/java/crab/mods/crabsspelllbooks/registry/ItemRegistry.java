@@ -15,6 +15,8 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> ELECTRICIAN_MANUAL =
             ITEMS.register("electrician_manual", ElectricianManualBook::new);
+    public static final RegistryObject<Item> ELDRITCH_GRIMOIRE =
+            ITEMS.register("eldritch_grimoire", ElectricianManualBook::new);
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

@@ -29,6 +29,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
+import software.bernie.geckolib.event.GeoRenderEvent;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(CrabsSpellbooks.MODID)
@@ -59,7 +60,8 @@ public class CrabsSpellbooks {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+                output.accept(ItemRegistry.ELDRITCH_GRIMOIRE.get());
+                output.accept(ItemRegistry.ELECTRICIAN_MANUAL.get());
             }).build());
 
     public CrabsSpellbooks() {

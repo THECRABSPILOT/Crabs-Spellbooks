@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "crabs_spellbooks:electrician_manual"
+    "crabs_spellbooks:electrician_manual",
+    "crabs_spellbooks:eldritch_grimoire"
   ]
 }
