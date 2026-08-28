@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AFA",
+    "SBS",
+    "AFA"
+  ],
+  "key": {
+    "S": {
+      "item": "irons_spellbooks:timeless_slurry"
+    },
+    "A": {
+      "item": "irons_spellbooks:magic_cloth"
+    },
+    "B": {
+      "item": "irons_spellbooks:ruined_book"
+    },
+    "F": {
+      "item": "irons_spellbooks:ancient_knowledge_fragment"
+    }
+  },
+  "result": {
+    "item": "crabs_spellbooks:eldritch_grimoire",
+    "count": 1
+  }
+}

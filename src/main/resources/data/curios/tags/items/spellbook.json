@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "crabs_spellbooks:electrician_manual",
-    "crabs_spellbooks:eldritch_grimoire"
+    "crabs_spellbooks:eldritch_grimoire",
+    "crabs_spellbooks:tome_of_the_tempest",
+    "crabs_spellbooks:garbled_text"
   ]
 }

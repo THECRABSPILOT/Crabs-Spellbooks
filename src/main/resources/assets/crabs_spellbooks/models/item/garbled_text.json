@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "crabs_spellbooks:item/spellbook_models/dictionary"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "crabs_spellbooks:item/text_gui"
+    },
+    "fixed": {
+      "parent": "crabs_spellbooks:item/spellbook_models/dictionary"
+    }
+  }
+}

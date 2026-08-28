@@ -2,6 +2,9 @@ package crab.mods.crabsspelllbooks;
 
 import com.mojang.logging.LogUtils;
 import crab.mods.crabsspelllbooks.registry.ItemRegistry;
+import crab.mods.crabsspelllbooks.registry.ModEffects;
+import crab.mods.crabsspelllbooks.spells.CSSpellRegistries;
+import crab.mods.crabsspelllbooks.spells.CSSpellRegistries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -62,6 +65,8 @@ public class CrabsSpellbooks {
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.ELDRITCH_GRIMOIRE.get());
                 output.accept(ItemRegistry.ELECTRICIAN_MANUAL.get());
+                output.accept(ItemRegistry.TOME_OF_TEMPEST.get());
+                output.accept(ItemRegistry.DICTIONARY.get());
             }).build());
 
     public CrabsSpellbooks() {
@@ -76,6 +81,9 @@ public class CrabsSpellbooks {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        ModEffects.register(modEventBus);
+        CSSpellRegistries.register(modEventBus);
 
         ItemRegistry.register(modEventBus);
 
@@ -126,4 +134,6 @@ public class CrabsSpellbooks {
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
     }
+
+
 }
