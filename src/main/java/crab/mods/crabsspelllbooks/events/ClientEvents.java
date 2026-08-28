@@ -1,9 +1,12 @@
 package crab.mods.crabsspelllbooks.events;
 
+import crab.mods.crabsspelllbooks.client.model.HasturSetModel;
+import crab.mods.crabsspelllbooks.client.model.ModModelLayers;
 import crab.mods.crabsspelllbooks.registry.ModEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -21,6 +24,11 @@ public class ClientEvents {
                 event.setCanceled(true);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModModelLayers.HASTUR_ARMOR, HasturSetModel::createBodyLayer);
     }
 
     @SubscribeEvent
