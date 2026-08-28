@@ -42,6 +42,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> HASTUR_BOOTS = ITEMS.register("hastur_boots",
             () -> new HasturArmorItem(ModArmorMaterials.HASTUR, ArmorItem.Type.BOOTS, new Item.Properties()));
 
+    public static final RegistryObject<Item> GOLDEN_WEAVE = ITEMS.register("golden_weave",
+            ()-> new Item(new Item.Properties()));
 
 
 

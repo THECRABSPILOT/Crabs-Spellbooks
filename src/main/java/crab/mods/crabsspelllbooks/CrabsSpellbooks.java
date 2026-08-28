@@ -67,6 +67,11 @@ public class CrabsSpellbooks {
                 output.accept(ItemRegistry.ELECTRICIAN_MANUAL.get());
                 output.accept(ItemRegistry.TOME_OF_TEMPEST.get());
                 output.accept(ItemRegistry.DICTIONARY.get());
+                output.accept(ItemRegistry.HASTUR_HELMET.get());
+                output.accept(ItemRegistry.HASTUR_CHESTPLATE.get());
+                output.accept(ItemRegistry.HASTUR_LEGGINGS.get());
+                output.accept(ItemRegistry.HASTUR_BOOTS.get());
+                output.accept(ItemRegistry.GOLDEN_WEAVE.get());
             }).build());
 
     public CrabsSpellbooks() {

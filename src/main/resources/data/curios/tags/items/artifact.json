@@ -1,7 +1,9 @@
 {
   "replace": false,
   "values": [
-    "crabs_spellbooks:eldritch_grimoire",
-    "crabs_spellbooks:electrician_manual"
+    "curios#ring",
+    "curios#back",
+    "curios#rings",
+    "curios#belt"
   ]
 }

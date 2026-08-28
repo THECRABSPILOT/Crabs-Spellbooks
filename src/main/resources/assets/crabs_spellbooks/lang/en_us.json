@@ -4,5 +4,8 @@
   "item.crabs_spellbooks.garbled_text" : "Eldritch Grimoire",
   "item.crabs_spellbooks.tome_of_the_tempest" : "Tome of the Tempest",
 
+  "curios.identifier.artifact": "Any",
+  "spell.crabs_spellbooks.sensory_deprivation": "Sensory Deprivation",
+  "spell.crabs_spellbooks.sensory_deprivation.guide": "(PVP SPELL) Blind target, Mute their sounds and hide their healthbar",
 
 }

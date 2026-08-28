@@ -24,7 +24,7 @@ public class SensoryDeprivationSpell extends AbstractSpell {
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.RARE)
             .setSchoolResource(SchoolRegistry.ELDRITCH_RESOURCE)
-            .setMaxLevel(5)
+            .setMaxLevel(1)
             .setCooldownSeconds(30)
             .build();
 
