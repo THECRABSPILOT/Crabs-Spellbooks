@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "irons_spellbooks:item/blank_rune",
+    "layer1": "crabs_spellbooks:item/yr"
+
+  }
+}

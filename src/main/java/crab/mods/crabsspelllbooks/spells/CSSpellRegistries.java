@@ -1,5 +1,6 @@
 package crab.mods.crabsspelllbooks.spells;
 
+import crab.mods.crabsspelllbooks.spells.Eldritch.MindWipeSpell;
 import crab.mods.crabsspelllbooks.spells.Eldritch.SensoryDeprivationSpell;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,7 +19,9 @@ public class CSSpellRegistries {
 
     //eldritch
 
-    public static final Supplier<AbstractSpell> SOUL_SEEKERS = registerSpell(new SensoryDeprivationSpell());
+    public static final Supplier<AbstractSpell> SENSORY_DEPRIVATION = registerSpell(new SensoryDeprivationSpell());
+
+    public static final Supplier<AbstractSpell> MIND_WIPE = registerSpell(new MindWipeSpell());
 
     public static void register(IEventBus eventBus)
     {

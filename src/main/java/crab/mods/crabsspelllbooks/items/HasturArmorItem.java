@@ -24,6 +24,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE;
+import static net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED;
+
 public class HasturArmorItem extends ArmorItem {
 
     private static final ResourceLocation HASTUR_TEXTURE =
@@ -58,12 +61,27 @@ public class HasturArmorItem extends ArmorItem {
                 // +50 Max Mana
                 builder.put(
                         AttributeRegistry.MAX_MANA.get(),
-                        new AttributeModifier(uuid, "Max Mana", 50.0D, AttributeModifier.Operation.ADDITION)
+                        new AttributeModifier(uuid, "Max Mana", 525.0D, AttributeModifier.Operation.ADDITION)
                 );
 
                 builder.put(
                         AttributeRegistry.ELDRITCH_SPELL_POWER.get(),
-                        new AttributeModifier(uuid, "Eldritch Spell Power", 0.10D, AttributeModifier.Operation.MULTIPLY_BASE)
+                        new AttributeModifier(uuid, "Eldritch Spell Power", 0.30D, AttributeModifier.Operation.MULTIPLY_BASE)
+                );
+
+                builder.put(
+                        ATTACK_DAMAGE,
+                        new AttributeModifier(uuid, "Attack Damage", 0.01D, AttributeModifier.Operation.MULTIPLY_BASE)
+                );
+
+                builder.put(
+                        ATTACK_SPEED,
+                        new AttributeModifier(uuid, "Attack Damage", 0.10D, AttributeModifier.Operation.MULTIPLY_BASE)
+                );
+
+                builder.put(
+                        AttributeRegistry.SPELL_POWER.get(),
+                        new AttributeModifier(uuid, "Spell Power", 0.10D, AttributeModifier.Operation.MULTIPLY_BASE)
                 );
 
                 this.attributeModifiers = builder.build();

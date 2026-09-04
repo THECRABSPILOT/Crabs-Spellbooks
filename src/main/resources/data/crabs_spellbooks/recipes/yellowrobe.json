@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RA ",
+    "GG ",
+    "   "
+  ],
+  "key": {
+    "R": {
+      "item": "crabs_spellbooks:yellow_rune"
+    },
+    "G": {
+      "item": "crabs_spellbooks:golden_weave"
+    },
+    "A": {
+      "item": "irons_spellbooks:wizard_chestplate"
+    }
+  },
+  "result": {
+    "item": "crabs_spellbooks:hastur_chestplate",
+    "count": 1
+  }
+}

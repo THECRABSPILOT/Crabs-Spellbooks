@@ -8,4 +8,17 @@
   "spell.crabs_spellbooks.sensory_deprivation": "Sensory Deprivation",
   "spell.crabs_spellbooks.sensory_deprivation.guide": "(PVP SPELL) Blind target, Mute their sounds and hide their healthbar",
 
+
+  "spell.crabs_spellbooks.mind_wipe": "Mind Wipe",
+  "spell.crabs_spellbooks.mind_wipe.guide": "Cleanse the mind of all its worth",
+
+  "item.crabs_spellbooks.hastur_helmet": "Yellow Hood",
+  "item.crabs_spellbooks.hastur_chestplate": "Yellow Robe",
+  "item.crabs_spellbooks.hastur_leggings": "Dark Leggings",
+  "item.crabs_spellbooks.hastur_boots": "Dark Boots",
+  "item.crabs_spellbooks.golden_weave": "Golden Weave",
+  "item.crabs_spellbooks.yellow_rune": "Yellow Rune",
+
+  "itemGroup.crabs_spellbooks.crabs_spellbooks_tab" : "Crabs Spellbooks"
+
 }

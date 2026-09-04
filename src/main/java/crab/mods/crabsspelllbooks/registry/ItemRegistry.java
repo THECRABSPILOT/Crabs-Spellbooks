@@ -45,6 +45,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GOLDEN_WEAVE = ITEMS.register("golden_weave",
             ()-> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> YELLOW_RUNE = ITEMS.register("yellow_rune",
+            ()-> new Item(new Item.Properties()));
+
 
 
     public static void register(IEventBus eventBus) {

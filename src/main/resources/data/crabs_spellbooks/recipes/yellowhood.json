@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RA ",
+    "GT ",
+    "   "
+  ],
+  "key": {
+    "T": {
+      "item": "irons_spellbooks:tarnished_helmet"
+    },
+    "R": {
+      "item": "crabs_spellbooks:yellow_rune"
+    },
+    "G": {
+      "item": "crabs_spellbooks:golden_weave"
+    },
+    "A": {
+      "item": "irons_spellbooks:wizard_helmet"
+    }
+  },
+  "result": {
+    "item": "crabs_spellbooks:hastur_helmet",
+    "count": 1
+  }
+}

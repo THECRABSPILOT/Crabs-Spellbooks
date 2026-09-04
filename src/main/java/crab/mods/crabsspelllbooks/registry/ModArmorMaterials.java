@@ -11,8 +11,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.function.Supplier;
 
 public enum ModArmorMaterials implements ArmorMaterial {
-    HASTUR("hastur",26 ,new int[] {10,12,13,10}, 25,
-            SoundEvents.ARMOR_EQUIP_ELYTRA,1f,10f,null);
+    HASTUR("hastur",50 ,new int[] {10,12,13,10}, 25,
+            SoundEvents.ARMOR_EQUIP_ELYTRA,5f,10f,null);
 
     private final String name;
     private final int durbilitymultiplier;

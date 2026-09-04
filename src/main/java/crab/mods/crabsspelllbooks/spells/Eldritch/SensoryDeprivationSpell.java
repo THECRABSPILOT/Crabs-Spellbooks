@@ -6,7 +6,10 @@ import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.*;
 import io.redspace.ironsspellbooks.api.util.Utils;
+import io.redspace.ironsspellbooks.capabilities.magic.TargetEntityCastData;
+import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -22,7 +25,7 @@ public class SensoryDeprivationSpell extends AbstractSpell {
     private final ResourceLocation spellId = ResourceLocation.fromNamespaceAndPath("crabs_spellbooks", "sensory_deprivation");
 
     private final DefaultConfig defaultConfig = new DefaultConfig()
-            .setMinRarity(SpellRarity.RARE)
+            .setMinRarity(SpellRarity.LEGENDARY)
             .setSchoolResource(SchoolRegistry.ELDRITCH_RESOURCE)
             .setMaxLevel(1)
             .setCooldownSeconds(30)
@@ -32,7 +35,7 @@ public class SensoryDeprivationSpell extends AbstractSpell {
         this.manaCostPerLevel = 15;
         this.baseSpellPower = 1;
         this.spellPowerPerLevel = 1;
-        this.castTime = 0;
+        this.castTime = 5;
         this.baseManaCost = 50;
     }
 
@@ -48,7 +51,7 @@ public class SensoryDeprivationSpell extends AbstractSpell {
 
     @Override
     public CastType getCastType() {
-        return CastType.INSTANT;
+        return CastType.LONG;
     }
 
     @Override
@@ -58,24 +61,25 @@ public class SensoryDeprivationSpell extends AbstractSpell {
 
     @Override
     public Optional<SoundEvent> getCastFinishSound() {
-        return Optional.of(io.redspace.ironsspellbooks.registries.SoundRegistry.ELDRITCH_BLAST.get());
+        return Optional.of(SoundRegistry.CLEANSE_CAST.get());
+    }
+
+    public boolean checkPreCastConditions(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData) {
+        return Utils.preCastTargetHelper(level, entity, playerMagicData, this, 32, .35f);
     }
 
     @Override
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
-        // Target an entity within 25 blocks via raycast
-        HitResult raycast = Utils.raycastForEntity(level, entity, 25, true);
+        if (playerMagicData.getAdditionalCastData() instanceof TargetEntityCastData targetData) {
+            var targetEntity = targetData.getTarget((ServerLevel) level);
+            if (targetEntity != null) {
 
-        if (raycast instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity target) {
-            int duration = 200; // 10 seconds (20 ticks * 10)
+                int duration = 200;
 
-            // 1. Apply Blindness
-            target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 0, false, false, true));
-
-            // 2. Apply Custom MobEffect for Muting & Hiding HP
-            target.addEffect(new MobEffectInstance(ModEffects.SENSORY_DEPRIVATION.get(), duration, 0, false, false, true));
+                targetEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 0, false, true, false));
+                targetEntity.addEffect(new MobEffectInstance(ModEffects.SENSORY_DEPRIVATION.get(), duration, 0, true, false, false));
+            }
         }
-
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }
 }

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CDC",
+    "ESE",
+    "VVV"
+  ],
+  "key": {
+    "D": {
+      "item": "irons_spellbooks:divine_soulshard"
+    },
+    "S": {
+      "item": "minecraft:nether_star"
+    },
+    "C": {
+      "item": "cataclysm:cursium_ingot"
+    },
+    "E": {
+      "item": "irons_spellbooks:dragonskin"
+    },
+    "V": {
+      "item": "minecraft:echo_shard"
+    }
+  },
+  "result": {
+    "item": "crabs_spellbooks:yellow_rune",
+    "count": 1
+  }
+}

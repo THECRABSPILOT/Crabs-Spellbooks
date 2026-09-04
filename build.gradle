@@ -87,6 +87,14 @@ repositories {
         url = "https://code.redspace.io/releases"
     }
 
+
+    maven {
+        url = "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
     maven { url = "https://maven.enginehub.org/repo/" }
     maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
     maven { url = "https://maven.theillusivec4.top" }
@@ -121,6 +129,12 @@ dependencies {
 
     // Caelus API
     implementation fg.deobf("curse.maven:caelus-308989:5281700")
+
+    //implementation fg.deobf("com.github.alextheshadowmancer:citadel-1.20.1:2.5.4")
+
+    implementation fg.deobf("curse.maven:lionfish-api-1001614:8095554")
+
+    implementation fg.deobf("curse.maven:l_enders-cataclysm-551586:8246047")
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
