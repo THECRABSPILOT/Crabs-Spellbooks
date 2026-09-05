@@ -12,7 +12,7 @@ public class JudgeOfTheEndModel extends GeoModel<JudgeOfTheEndEntity> {
 
     @Override
     public ResourceLocation getTextureResource(JudgeOfTheEndEntity animatable) {
-        return new ResourceLocation("crabs_spellbooks", "textures/entity/judgeoftheend.png");
+        return new ResourceLocation("crabs_spellbooks", "textures/entity/judge.png");
     }
 
     @Override

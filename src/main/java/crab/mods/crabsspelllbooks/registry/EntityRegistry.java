@@ -18,7 +18,7 @@ public class EntityRegistry {
     public static final RegistryObject<EntityType<JudgeOfTheEndEntity>> JUDGE_OF_THE_END =
             ENTITY_TYPES.register("judge_of_the_end", () ->
                     EntityType.Builder.of(JudgeOfTheEndEntity::new, MobCategory.MONSTER)
-                            .sized(0.6f, 1.9f)
+                            .sized(1.6f, 5.0f)
                             .clientTrackingRange(8)
                             .build("judge_of_the_end")
             );
