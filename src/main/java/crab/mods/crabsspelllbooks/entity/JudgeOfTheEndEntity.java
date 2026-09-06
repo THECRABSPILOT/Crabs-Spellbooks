@@ -1,5 +1,7 @@
 package crab.mods.crabsspelllbooks.entity;
 
+import io.redspace.ironsspellbooks.entity.spells.black_hole.BlackHole;
+import io.redspace.ironsspellbooks.entity.spells.magic_missile.MagicMissileProjectile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -15,6 +17,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -37,6 +40,11 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     private static final EntityDataAccessor<Boolean> IS_ACTIVE =
             SynchedEntityData.defineId(JudgeOfTheEndEntity.class, EntityDataSerializers.BOOLEAN);
@@ -46,13 +54,20 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
             SynchedEntityData.defineId(JudgeOfTheEndEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_RETREATING =
             SynchedEntityData.defineId(JudgeOfTheEndEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> ATTACK_TYPE =
+            SynchedEntityData.defineId(JudgeOfTheEndEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_DASHING =
+            SynchedEntityData.defineId(JudgeOfTheEndEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation PREBOSS_IDLE = RawAnimation.begin().thenLoop("prebossidle");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
+    private static final RawAnimation DASH = RawAnimation.begin().thenLoop("dash");
     private static final RawAnimation CHALLENGE = RawAnimation.begin()
             .then("challenge", Animation.LoopType.PLAY_ONCE);
     private static final RawAnimation SLASH = RawAnimation.begin()
+            .then("slash", Animation.LoopType.PLAY_ONCE);
+    private static final RawAnimation CAST_SPELL = RawAnimation.begin()
             .then("slash", Animation.LoopType.PLAY_ONCE);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -70,6 +85,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     private int halfHeartPauseTimer = -1;
     private int retreatTimer = -1;
     private LivingEntity targetToHeal = null;
+    private boolean droppedBookThisFight = false;
 
     private static final int CHALLENGE_ANIM_TICKS = 100;
     private static final int HALF_HEART_PAUSE_TICKS = 30;
@@ -85,6 +101,13 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         return !isActive() && !isActivating() && !isPausing() && !isRetreating();
     }
 
+    public int getPhase() {
+        float ratio = this.getHealth() / this.getMaxHealth();
+        if (ratio <= 0.333F) return 3; // Phase 2 Enraged
+        if (ratio <= 0.50F) return 2;  // Phase 2
+        return 1;                       // Phase 1
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -92,6 +115,8 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         this.entityData.define(IS_ACTIVATING, false);
         this.entityData.define(IS_PAUSING, false);
         this.entityData.define(IS_RETREATING, false);
+        this.entityData.define(ATTACK_TYPE, 0);
+        this.entityData.define(IS_DASHING, false);
     }
 
     public boolean isActive() { return this.entityData.get(IS_ACTIVE); }
@@ -106,10 +131,17 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     public boolean isRetreating() { return this.entityData.get(IS_RETREATING); }
     public void setRetreating(boolean retreating) { this.entityData.set(IS_RETREATING, retreating); }
 
+    public int getAttackType() { return this.entityData.get(ATTACK_TYPE); }
+    public void setAttackType(int type) { this.entityData.set(ATTACK_TYPE, type); }
+
+    public boolean isDashing() { return this.entityData.get(IS_DASHING); }
+    public void setDashing(boolean dashing) { this.entityData.set(IS_DASHING, dashing); }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
 
+        // Retreat goal when returning home
         this.goalSelector.addGoal(2, new Goal() {
             @Override
             public boolean canUse() {
@@ -157,43 +189,33 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
             }
         });
 
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, false) {
+        // Special attacks
+        this.goalSelector.addGoal(3, new TripleDashSlashGoal(this));
+        this.goalSelector.addGoal(3, new ProjectileBurstGoal(this));
+        this.goalSelector.addGoal(3, new BlackHoleGoal(this));
+
+        // Fallback pursuit & standard attack when special attacks aren't active
+        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.25D, true) {
             @Override
             public boolean canUse() {
                 return isActive() && !isPausing() && !isRetreating() && super.canUse();
             }
 
             @Override
-            protected void checkAndPerformAttack(LivingEntity target, double distanceToTargetSqr) {
-                double attackReachSqr = this.getAttackReachSqr(target);
-                if (distanceToTargetSqr <= attackReachSqr && JudgeOfTheEndEntity.this.attackCooldown <= 0) {
-                    JudgeOfTheEndEntity.this.doHurtTarget(target);
-                }
+            public boolean canContinueToUse() {
+                return isActive() && !isPausing() && !isRetreating() && super.canContinueToUse();
             }
         });
 
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
-            @Override
-            public boolean canUse() {
-                return isActive() && !isPausing() && !isRetreating() && super.canUse();
-            }
-        });
-
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F) {
+        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 64.0F) {
             @Override
             public boolean canUse() {
                 return (isActive() || isActivating() || isPausing()) && !isRetreating() && super.canUse();
             }
         });
 
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this) {
-            @Override
-            public boolean canUse() {
-                return isActive() && !isPausing() && !isRetreating() && super.canUse();
-            }
-        });
-
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true) {
+        // Always target nearby players when active
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, false) {
             @Override
             public boolean canUse() {
                 return isActive() && !isPausing() && !isRetreating() && super.canUse();
@@ -204,9 +226,9 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     @Override
     public boolean doHurtTarget(Entity target) {
         if (this.attackCooldown <= 0 && isActive() && !isPausing() && !isRetreating()) {
-            this.attackCooldown = 20;
+            this.attackCooldown = getPhase() == 3 ? 5 : 20;
 
-            if (target instanceof LivingEntity livingTarget) {
+            if (target instanceof Player livingTarget) {
                 float targetHealth = livingTarget.getHealth();
                 float proposedDamage = this.getAttackDamage();
 
@@ -214,11 +236,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
                     livingTarget.setHealth(1.0F);
 
                     if (!this.level().isClientSide) {
-                        this.setPausing(true);
-                        this.halfHeartPauseTimer = HALF_HEART_PAUSE_TICKS;
-                        this.targetToHeal = livingTarget;
-                        this.getNavigation().stop();
-                        this.bossEvent.removeAllPlayers();
+                        triggerHalfHeartPauseAndBookDrop(livingTarget);
                     }
                     return true;
                 }
@@ -230,6 +248,26 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
             return super.doHurtTarget(target);
         }
         return false;
+    }
+
+    private void triggerHalfHeartPauseAndBookDrop(LivingEntity target) {
+        this.setPausing(true);
+        this.halfHeartPauseTimer = HALF_HEART_PAUSE_TICKS;
+        this.targetToHeal = target;
+        this.getNavigation().stop();
+        this.bossEvent.removeAllPlayers();
+
+        if (!droppedBookThisFight && this.getHealth() / this.getMaxHealth() <= 0.334F) {
+            ItemEntity bookEntity = new ItemEntity(
+                    this.level(),
+                    this.getX(),
+                    this.getY() + 0.5D,
+                    this.getZ(),
+                    new ItemStack(Items.BOOK)
+            );
+            this.level().addFreshEntity(bookEntity);
+            this.droppedBookThisFight = true;
+        }
     }
 
     private float getAttackDamage() {
@@ -262,6 +300,11 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
 
         if (isStatue() || isPausing()) {
             this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
+        }
+
+        if (!this.level().isClientSide) {
+            enforceNonLethalPlayerSafety();
+            updateBossBarTracking();
         }
 
         if (!this.level().isClientSide && isPausing()) {
@@ -297,7 +340,6 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
                 activationTimer = -1;
                 setActivating(false);
                 setActive(true);
-                showBossbarToNearbyPlayers();
             }
         }
 
@@ -319,6 +361,61 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
 
         if (!this.level().isClientSide && isActive() && !isRetreating() && !isPausing()) {
             this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        }
+    }
+
+    private void updateBossBarTracking() {
+        if (!isActive() || isPausing() || isRetreating()) {
+            this.bossEvent.removeAllPlayers();
+            return;
+        }
+
+        List<ServerPlayer> nearbyPlayers = this.level().getEntitiesOfClass(
+                ServerPlayer.class,
+                this.getBoundingBox().inflate(32.0D)
+        );
+
+        Set<ServerPlayer> currentPlayers = new HashSet<>(this.bossEvent.getPlayers());
+
+        for (ServerPlayer player : nearbyPlayers) {
+            if (!currentPlayers.contains(player)) {
+                this.bossEvent.addPlayer(player);
+            }
+        }
+
+        for (ServerPlayer player : currentPlayers) {
+            if (!nearbyPlayers.contains(player)) {
+                this.bossEvent.removePlayer(player);
+            }
+        }
+    }
+
+    private void enforceNonLethalPlayerSafety() {
+        List<ServerPlayer> players = this.level().getEntitiesOfClass(
+                ServerPlayer.class,
+                this.getBoundingBox().inflate(32.0D)
+        );
+
+        for (ServerPlayer player : players) {
+            if (isActive() || isPausing()) {
+                player.resetFallDistance();
+            }
+
+            if (player.getHealth() <= 1.0F && (isActive() || isPausing())) {
+                player.setHealth(1.0F);
+                clearLethalEntitiesAroundPlayer(player);
+            }
+        }
+    }
+
+    private void clearLethalEntitiesAroundPlayer(ServerPlayer player) {
+        List<Entity> dangerousEntities = this.level().getEntities(
+                this,
+                player.getBoundingBox().inflate(8.0D),
+                e -> e instanceof MagicMissileProjectile || e instanceof BlackHole
+        );
+        for (Entity e : dangerousEntities) {
+            e.discard();
         }
     }
 
@@ -345,7 +442,11 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
 
         if (this.getHealth() - amount <= 1.0F) {
             this.setHealth(1.0F);
-            startRetreat();
+            if (source.getEntity() instanceof LivingEntity attacker) {
+                triggerHalfHeartPauseAndBookDrop(attacker);
+            } else {
+                startRetreat();
+            }
             return true;
         }
 
@@ -368,11 +469,26 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         }
     }
 
+    @Override
+    public void startSeenByPlayer(ServerPlayer player) {
+        super.startSeenByPlayer(player);
+        if (isActive() && !isPausing() && !isRetreating()) {
+            this.bossEvent.addPlayer(player);
+        }
+    }
+
+    @Override
+    public void stopSeenByPlayer(ServerPlayer player) {
+        super.stopSeenByPlayer(player);
+        this.bossEvent.removePlayer(player);
+    }
+
     private void startRetreat() {
         setActive(false);
         setActivating(false);
         setPausing(false);
         setRetreating(true);
+        setDashing(false);
         this.retreatTimer = 0;
         this.setTarget(null);
         this.bossEvent.removeAllPlayers();
@@ -406,25 +522,18 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         setActivating(false);
         setPausing(false);
         setRetreating(false);
+        setAttackType(0);
+        setDashing(false);
 
         this.activationTimer = -1;
         this.halfHeartPauseTimer = -1;
         this.retreatTimer = -1;
         this.targetToHeal = null;
+        this.droppedBookThisFight = false;
         this.getNavigation().stop();
         this.setHealth(this.getMaxHealth());
         this.setTarget(null);
         this.bossEvent.removeAllPlayers();
-    }
-
-    private void showBossbarToNearbyPlayers() {
-        if (!this.level().isClientSide) {
-            for (ServerPlayer player : this.level().getEntitiesOfClass(
-                    ServerPlayer.class,
-                    this.getBoundingBox().inflate(32.0D))) {
-                this.bossEvent.addPlayer(player);
-            }
-        }
     }
 
     @Override
@@ -437,6 +546,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         controllers.add(new AnimationController<>(this, "statue", 0, this::statuePredicate));
         controllers.add(new AnimationController<>(this, "combat", 5, this::combatPredicate)
                 .triggerableAnim("slash", SLASH)
+                .triggerableAnim("slash", CAST_SPELL)
                 .receiveTriggeredAnimations());
     }
 
@@ -450,6 +560,10 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     private PlayState combatPredicate(AnimationState<JudgeOfTheEndEntity> event) {
         if (isStatue()) {
             return PlayState.STOP;
+        }
+
+        if (isDashing() && isActive() && !isPausing() && !isRetreating()) {
+            return event.setAndContinue(DASH);
         }
 
         if (event.getController().isPlayingTriggeredAnimation()
@@ -477,6 +591,9 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         tag.putBoolean("IsActivating", this.isActivating());
         tag.putBoolean("IsPausing", this.isPausing());
         tag.putBoolean("IsRetreating", this.isRetreating());
+        tag.putInt("AttackType", this.getAttackType());
+        tag.putBoolean("IsDashing", this.isDashing());
+        tag.putBoolean("DroppedBookThisFight", this.droppedBookThisFight);
         tag.putInt("ActivationTimer", this.activationTimer);
         tag.putInt("HalfHeartPauseTimer", this.halfHeartPauseTimer);
         tag.putInt("RetreatTimer", this.retreatTimer);
@@ -495,6 +612,13 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         this.setActivating(tag.getBoolean("IsActivating"));
         this.setPausing(tag.getBoolean("IsPausing"));
         this.setRetreating(tag.getBoolean("IsRetreating"));
+        if (tag.contains("AttackType")) {
+            this.setAttackType(tag.getInt("AttackType"));
+        }
+        if (tag.contains("IsDashing")) {
+            this.setDashing(tag.getBoolean("IsDashing"));
+        }
+        this.droppedBookThisFight = tag.getBoolean("DroppedBookThisFight");
         this.activationTimer = tag.contains("ActivationTimer") ? tag.getInt("ActivationTimer") : -1;
         this.halfHeartPauseTimer = tag.contains("HalfHeartPauseTimer") ? tag.getInt("HalfHeartPauseTimer") : -1;
         this.retreatTimer = tag.contains("RetreatTimer") ? tag.getInt("RetreatTimer") : -1;
@@ -505,6 +629,191 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
                     tag.getDouble("RetreatY"),
                     tag.getDouble("RetreatZ")
             );
+        }
+    }
+
+    public class TripleDashSlashGoal extends Goal {
+        private int dashesRemaining;
+        private int timer;
+        private boolean isDashing;
+
+        public TripleDashSlashGoal(JudgeOfTheEndEntity boss) {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity target = JudgeOfTheEndEntity.this.getTarget();
+            return JudgeOfTheEndEntity.this.isActive()
+                    && !JudgeOfTheEndEntity.this.isPausing()
+                    && !JudgeOfTheEndEntity.this.isRetreating()
+                    && JudgeOfTheEndEntity.this.getAttackType() == 0
+                    && target != null && target.isAlive();
+        }
+
+        @Override
+        public void start() {
+            this.dashesRemaining = JudgeOfTheEndEntity.this.getPhase() >= 2 ? 3 : 1;
+            this.timer = 0;
+            this.isDashing = false;
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = JudgeOfTheEndEntity.this.getTarget();
+            if (target == null) return;
+
+            JudgeOfTheEndEntity.this.getLookControl().setLookAt(target, 30.0F, 30.0F);
+
+            if (!isDashing) {
+                timer++;
+                int delay = JudgeOfTheEndEntity.this.getPhase() == 3 ? 3 : 8;
+                if (timer >= delay) {
+                    isDashing = true;
+                    timer = 10;
+                    JudgeOfTheEndEntity.this.setDashing(true);
+                }
+            } else {
+                Vec3 dashDir = target.position().subtract(JudgeOfTheEndEntity.this.position()).normalize().scale(1.1D);
+                JudgeOfTheEndEntity.this.setDeltaMovement(dashDir.x, JudgeOfTheEndEntity.this.getDeltaMovement().y, dashDir.z);
+
+                if (JudgeOfTheEndEntity.this.distanceToSqr(target) <= 4.0D) {
+                    JudgeOfTheEndEntity.this.doHurtTarget(target);
+                }
+
+                timer--;
+                if (timer <= 0) {
+                    isDashing = false;
+                    JudgeOfTheEndEntity.this.setDashing(false);
+                    dashesRemaining--;
+                }
+            }
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return dashesRemaining > 0 && canUse();
+        }
+
+        @Override
+        public void stop() {
+            JudgeOfTheEndEntity.this.setDashing(false);
+            JudgeOfTheEndEntity.this.setAttackType((JudgeOfTheEndEntity.this.getAttackType() + 1) % 3);
+        }
+    }
+
+    public class ProjectileBurstGoal extends Goal {
+        private int burstCount;
+        private int timer;
+
+        public ProjectileBurstGoal(JudgeOfTheEndEntity boss) {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity target = JudgeOfTheEndEntity.this.getTarget();
+            return JudgeOfTheEndEntity.this.isActive()
+                    && !JudgeOfTheEndEntity.this.isPausing()
+                    && !JudgeOfTheEndEntity.this.isRetreating()
+                    && JudgeOfTheEndEntity.this.getAttackType() == 1
+                    && target != null && target.isAlive();
+        }
+
+        @Override
+        public void start() {
+            this.burstCount = JudgeOfTheEndEntity.this.getPhase() >= 2 ? 5 : 1;
+            this.timer = 0;
+            JudgeOfTheEndEntity.this.getNavigation().stop();
+            JudgeOfTheEndEntity.this.triggerAnim("combat", "slash");
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = JudgeOfTheEndEntity.this.getTarget();
+            if (target == null) return;
+
+            JudgeOfTheEndEntity.this.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            timer--;
+
+            if (timer <= 0 && burstCount > 0) {
+                timer = JudgeOfTheEndEntity.this.getPhase() == 3 ? 2 : 6;
+                burstCount--;
+                fireProjectile(target);
+            }
+        }
+
+        private void fireProjectile(LivingEntity target) {
+            if (JudgeOfTheEndEntity.this.level().isClientSide) return;
+            MagicMissileProjectile missile = new MagicMissileProjectile(JudgeOfTheEndEntity.this.level(), JudgeOfTheEndEntity.this);
+            missile.setPos(JudgeOfTheEndEntity.this.getX(), JudgeOfTheEndEntity.this.getY(0.6D), JudgeOfTheEndEntity.this.getZ());
+
+            Vec3 dir = target.position().subtract(JudgeOfTheEndEntity.this.position()).normalize();
+            missile.shoot(dir.x, dir.y, dir.z, 1.5F, 2.0F);
+            missile.setDamage(6.0F);
+            JudgeOfTheEndEntity.this.level().addFreshEntity(missile);
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return burstCount > 0 && canUse();
+        }
+
+        @Override
+        public void stop() {
+            JudgeOfTheEndEntity.this.setAttackType((JudgeOfTheEndEntity.this.getAttackType() + 1) % 3);
+        }
+    }
+
+    public class BlackHoleGoal extends Goal {
+        private int timer;
+
+        public BlackHoleGoal(JudgeOfTheEndEntity boss) {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity target = JudgeOfTheEndEntity.this.getTarget();
+            return JudgeOfTheEndEntity.this.isActive()
+                    && !JudgeOfTheEndEntity.this.isPausing()
+                    && !JudgeOfTheEndEntity.this.isRetreating()
+                    && JudgeOfTheEndEntity.this.getPhase() >= 2
+                    && JudgeOfTheEndEntity.this.getAttackType() == 2
+                    && target != null && target.isAlive();
+        }
+
+        @Override
+        public void start() {
+            this.timer = 20;
+            JudgeOfTheEndEntity.this.getNavigation().stop();
+            JudgeOfTheEndEntity.this.triggerAnim("combat", "slash");
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = JudgeOfTheEndEntity.this.getTarget();
+            if (target != null) {
+                JudgeOfTheEndEntity.this.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            }
+
+            timer--;
+            if (timer == 0 && target != null && !JudgeOfTheEndEntity.this.level().isClientSide) {
+                BlackHole blackHole = new BlackHole(JudgeOfTheEndEntity.this.level(), JudgeOfTheEndEntity.this);
+                blackHole.setPos(target.getX(), target.getY() + 1.0D, target.getZ());
+                blackHole.setDamage(4.0F);
+                JudgeOfTheEndEntity.this.level().addFreshEntity(blackHole);
+            }
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return timer > 0;
+        }
+
+        @Override
+        public void stop() {
+            JudgeOfTheEndEntity.this.setAttackType(0);
         }
     }
 

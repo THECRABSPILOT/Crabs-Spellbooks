@@ -132,9 +132,13 @@ dependencies {
 
     //implementation fg.deobf("com.github.alextheshadowmancer:citadel-1.20.1:2.5.4")
 
+
     implementation fg.deobf("curse.maven:lionfish-api-1001614:8095554")
 
     implementation fg.deobf("curse.maven:l_enders-cataclysm-551586:8246047")
+
+    //lodestone
+    implementation fg.deobf("curse.maven:lodestone-616457:6213794")
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']

@@ -1,6 +1,7 @@
 package crab.mods.crabsspelllbooks;
 
 import com.mojang.logging.LogUtils;
+import crab.mods.crabsspelllbooks.registry.BlockRegistry;
 import crab.mods.crabsspelllbooks.registry.EntityRegistry;
 import crab.mods.crabsspelllbooks.registry.ItemRegistry;
 import crab.mods.crabsspelllbooks.registry.ModEffects;
@@ -75,6 +76,10 @@ public class CrabsSpellbooks {
                 output.accept(ItemRegistry.HASTUR_BOOTS.get());
                 output.accept(ItemRegistry.GOLDEN_WEAVE.get());
                 output.accept(ItemRegistry.YELLOW_RUNE.get());
+                output.accept(ItemRegistry.ELDRITCH_UPGRADE_ORB_ITEM.get());
+                output.accept(ItemRegistry.BEAM_BLOCK_ITEM.get());
+                output.accept(ItemRegistry.STEAM_PUMP_ENTITY.get());
+                output.accept(ItemRegistry.NOVA.get());
             }).build());
 
     public CrabsSpellbooks() {
@@ -92,6 +97,7 @@ public class CrabsSpellbooks {
 
         ItemRegistry.register(modEventBus);
         EntityRegistry.register(modEventBus);
+        BlockRegistry.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
 

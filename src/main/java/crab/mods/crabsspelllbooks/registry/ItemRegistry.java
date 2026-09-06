@@ -5,6 +5,7 @@ import crab.mods.crabsspelllbooks.items.*;
 import io.redspace.ironsspellbooks.item.UpgradeOrbItem;
 import io.redspace.ironsspellbooks.registries.UpgradeOrbTypeRegistry;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -48,7 +49,17 @@ public class ItemRegistry {
     public static final RegistryObject<Item> YELLOW_RUNE = ITEMS.register("yellow_rune",
             ()-> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> BEAM_BLOCK_ITEM = ITEMS.register("beam_block",
+            () -> new BlockItem(BlockRegistry.BEAM_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item>    STEAM_PUMP_ENTITY = ITEMS.register("steam_pump",
+            () -> new BlockItem(BlockRegistry.STEAM_PUMP.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> NOVA = ITEMS.register("nova",
+            ()-> new TheNova());
+
+    public static final RegistryObject<Item> ABYSSALNOVA = ITEMS.register("abyssal_nova",
+            ()-> new AbyssalNova());
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
