@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "crabs_spellbooks:monolith1",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 192837465,
+    "spacing": 20,
+    "separation": 8
+  }
+}
