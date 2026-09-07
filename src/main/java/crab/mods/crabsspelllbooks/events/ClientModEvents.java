@@ -1,6 +1,7 @@
 package crab.mods.crabsspelllbooks.events;
 
 import crab.mods.crabsspelllbooks.CrabsSpellbooks;
+import crab.mods.crabsspelllbooks.blocks.RiftBlockRenderer;
 import crab.mods.crabsspelllbooks.client.BeamBlockEntityRenderer;
 import crab.mods.crabsspelllbooks.client.model.HasturSetModel;
 import crab.mods.crabsspelllbooks.client.model.ModModelLayers;
@@ -49,6 +50,7 @@ public class ClientModEvents {
                 BlockRegistry.BEAM_BLOCK_ENTITY.get(),
                 BeamBlockEntityRenderer::new
         );
+        event.registerBlockEntityRenderer(BlockRegistry.RIFT_BLOCK_ENTITY.get(), RiftBlockRenderer::new);
     }
 
 

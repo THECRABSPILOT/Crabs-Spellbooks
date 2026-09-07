@@ -55,6 +55,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item>    STEAM_PUMP_ENTITY = ITEMS.register("steam_pump",
             () -> new BlockItem(BlockRegistry.STEAM_PUMP.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item>    RIFT = ITEMS.register("rift",
+            () -> new BlockItem(BlockRegistry.RIFT.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> NOVA = ITEMS.register("nova",
             ()-> new TheNova());
 

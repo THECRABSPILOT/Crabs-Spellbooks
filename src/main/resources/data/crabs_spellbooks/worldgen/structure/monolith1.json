@@ -1,6 +1,9 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#minecraft:is_end",
+  "biomes": [
+    "minecraft:end_highlands",
+    "minecraft:end_midlands"
+  ],
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "none",

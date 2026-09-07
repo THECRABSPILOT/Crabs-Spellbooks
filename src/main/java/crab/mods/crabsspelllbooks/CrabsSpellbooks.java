@@ -79,6 +79,7 @@ public class CrabsSpellbooks {
                 output.accept(ItemRegistry.ELDRITCH_UPGRADE_ORB_ITEM.get());
                 output.accept(ItemRegistry.BEAM_BLOCK_ITEM.get());
                 output.accept(ItemRegistry.STEAM_PUMP_ENTITY.get());
+                output.accept(ItemRegistry.RIFT.get());
                 output.accept(ItemRegistry.NOVA.get());
             }).build());
 

@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "crabs_spellbooks:arena1",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 4096,
+    "separation": 0,
+    "spread_type": "linear",
+    "salt": 172034589
+  }
+}

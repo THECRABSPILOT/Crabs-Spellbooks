@@ -2,8 +2,10 @@ package crab.mods.crabsspelllbooks.registry;
 
 import crab.mods.crabsspelllbooks.CrabsSpellbooks;
 import crab.mods.crabsspelllbooks.blocks.BeamBlock;
+import crab.mods.crabsspelllbooks.blocks.RiftBlock;
 import crab.mods.crabsspelllbooks.blocks.SteamPumpBlock;
 import crab.mods.crabsspelllbooks.blocks.entity.BeamBlockEntity;
+import crab.mods.crabsspelllbooks.blocks.entity.RiftBlockEntity;
 import crab.mods.crabsspelllbooks.blocks.entity.SteamPumpBlockEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -55,6 +57,21 @@ public class BlockRegistry {
                     () -> BlockEntityType.Builder.of(SteamPumpBlockEntity::new, STEAM_PUMP.get()).build(null)
             );
 
+
+    public static final RegistryObject<Block> RIFT = BLOCKS.register("rift",
+            () -> new RiftBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_MAGENTA)
+                    .strength(200.0F, 6.0F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .lightLevel(state -> 8)
+            )
+    );
+
+    public static final RegistryObject<BlockEntityType<RiftBlockEntity>> RIFT_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("rift",
+                    () -> BlockEntityType.Builder.of(RiftBlockEntity::new, RIFT.get()).build(null)
+            );
 
 
     public static void register(IEventBus eventBus) {
