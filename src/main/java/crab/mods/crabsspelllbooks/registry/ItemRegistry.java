@@ -49,6 +49,12 @@ public class ItemRegistry {
     public static final RegistryObject<Item> YELLOW_RUNE = ITEMS.register("yellow_rune",
             ()-> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> TOKEN_OF_THE_THIRD = ITEMS.register("third_token",
+            ()-> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> COSMIC_GLASS = ITEMS.register("cosmic_glass",
+            ()-> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> BEAM_BLOCK_ITEM = ITEMS.register("beam_block",
             () -> new BlockItem(BlockRegistry.BEAM_BLOCK.get(), new Item.Properties()));
 

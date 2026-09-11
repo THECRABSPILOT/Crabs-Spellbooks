@@ -81,6 +81,7 @@ public class CrabsSpellbooks {
                 output.accept(ItemRegistry.STEAM_PUMP_ENTITY.get());
                 output.accept(ItemRegistry.RIFT.get());
                 output.accept(ItemRegistry.NOVA.get());
+                output.accept(ItemRegistry.TOKEN_OF_THE_THIRD.get());
             }).build());
 
     public CrabsSpellbooks() {

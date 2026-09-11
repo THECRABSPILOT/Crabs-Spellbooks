@@ -15,7 +15,7 @@ public class EntityAttributes {
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(EntityRegistry.JUDGE_OF_THE_END.get(),
                 Monster.createMonsterAttributes()
-                        .add(Attributes.MAX_HEALTH, 600.0D)
+                        .add(Attributes.MAX_HEALTH, 2500.0D)
                         .add(Attributes.MOVEMENT_SPEED, 0.25D)
                         .add(Attributes.ATTACK_DAMAGE, 8.0D)
                         .add(Attributes.FOLLOW_RANGE, 64.0D)

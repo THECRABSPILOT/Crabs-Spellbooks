@@ -51,7 +51,7 @@ public class RiftBlock extends BaseEntityBlock implements EntityBlock {
                 if (targetLevel != null) {
                     serverPlayer.teleportTo(
                             targetLevel,
-                            0.5, 70.0, 0.5,
+                            -23.0, 70.0, 0.0,
                             serverPlayer.getYRot(),
                             serverPlayer.getXRot()
                     );

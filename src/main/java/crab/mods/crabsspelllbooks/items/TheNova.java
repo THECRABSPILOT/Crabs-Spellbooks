@@ -77,15 +77,15 @@ public class TheNova extends CastingItem implements GeoItem {
             false,
             (model, entity, arm) -> {
                 if (arm == HumanoidArm.RIGHT) {
-                    model.rightArm.xRot = (float) Math.toRadians(-160);
-                    model.rightArm.yRot = (float) Math.toRadians(40);;
+                    model.rightArm.xRot = (float) Math.toRadians(0);
+                    model.rightArm.yRot = (float) Math.toRadians(0);;
                     model.rightArm.zRot = 0.0F;
 
                     model.rightArm.y -= 50.0F;
                 } else {
-                    model.leftArm.xRot = (float) Math.toRadians(-90);
-                    model.leftArm.yRot = 0.0F;
-                    model.leftArm.zRot = 0.0F;
+                    model.leftArm.xRot = (float) Math.toRadians(10);
+                    model.leftArm.yRot = (float) Math.toRadians(-45);;;
+                    model.leftArm.zRot = (float) Math.toRadians(-20);;;
                 }
             }
     );

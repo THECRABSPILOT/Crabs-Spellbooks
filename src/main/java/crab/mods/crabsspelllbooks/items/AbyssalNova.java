@@ -3,13 +3,19 @@ package crab.mods.crabsspelllbooks.items;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import crab.mods.crabsspelllbooks.items.model.AbyssalNovaModel;
+import crab.mods.crabsspelllbooks.items.renderer.TheNovaRenderer;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.item.CastingItem;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -67,18 +73,45 @@ public class AbyssalNova extends CastingItem implements GeoItem {
         return this.cache;
     }
 
+    public static final HumanoidModel.ArmPose ZOMBIE_ARM_POSE = HumanoidModel.ArmPose.create(
+            "ZOMBIE_NOVA",
+            false,
+            (model, entity, arm) -> {
+                if (arm == HumanoidArm.RIGHT) {
+                    model.rightArm.xRot = (float) Math.toRadians(0);
+                    model.rightArm.yRot = (float) Math.toRadians(0);;
+                    model.rightArm.zRot = 0.0F;
+
+                    model.rightArm.y -= 50.0F;
+                } else {
+                    model.leftArm.xRot = (float) Math.toRadians(10);
+                    model.leftArm.yRot = (float) Math.toRadians(-45);;;
+                    model.leftArm.zRot = (float) Math.toRadians(-20);;;
+                }
+            }
+    );
+
+
+    // Modern Forge / GeckoLib 4 setup
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private GeoItemRenderer<AbyssalNova> renderer;
+            private TheNovaRenderer renderer;
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null) {
-                    // Instantiate a standard GeoItemRenderer passing your AbyssalNovaModel
-                    this.renderer = new GeoItemRenderer<>(new AbyssalNovaModel());
+                    this.renderer = new TheNovaRenderer();
                 }
                 return this.renderer;
+            }
+
+            @Override
+            public HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack itemStack) {
+                if (!itemStack.isEmpty()) {
+                    return ZOMBIE_ARM_POSE;
+                }
+                return HumanoidModel.ArmPose.EMPTY;
             }
         });
     }

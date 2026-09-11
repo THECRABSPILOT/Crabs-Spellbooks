@@ -1,5 +1,7 @@
 package crab.mods.crabsspelllbooks.entity;
 
+import crab.mods.crabsspelllbooks.entity.longgoals.JudgeShadowSlashGoal;
+import crab.mods.crabsspelllbooks.registry.ItemRegistry;
 import io.redspace.ironsspellbooks.entity.spells.black_hole.BlackHole;
 import io.redspace.ironsspellbooks.entity.spells.magic_missile.MagicMissileProjectile;
 import net.minecraft.nbt.CompoundTag;
@@ -68,7 +70,10 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     private static final RawAnimation SLASH = RawAnimation.begin()
             .then("slash", Animation.LoopType.PLAY_ONCE);
     private static final RawAnimation CAST_SPELL = RawAnimation.begin()
-            .then("slash", Animation.LoopType.PLAY_ONCE);
+            .then("instacast", Animation.LoopType.PLAY_ONCE);
+
+    private static final RawAnimation LONG_CAST_SPELL = RawAnimation.begin()
+            .then("longcast", Animation.LoopType.PLAY_ONCE);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -78,7 +83,9 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
             BossEvent.BossBarOverlay.PROGRESS
     );
 
-    private Vec3 retreatLocation;
+    // Hardcode retreat location directly to (16, 67, 0)
+    private static final Vec3 HARDCODED_RETREAT_POS = new Vec3(16.0D, 67.0D, 0.0D);
+    private Vec3 retreatLocation = HARDCODED_RETREAT_POS;
     private float homeYRot;
     private int activationTimer = -1;
     private int attackCooldown = 0;
@@ -141,7 +148,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
 
-        // Retreat goal when returning home
+        this.goalSelector.addGoal(2, new JudgeShadowSlashGoal(this, 18.0f));
         this.goalSelector.addGoal(2, new Goal() {
             @Override
             public boolean canUse() {
@@ -263,7 +270,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
                     this.getX(),
                     this.getY() + 0.5D,
                     this.getZ(),
-                    new ItemStack(Items.BOOK)
+                    new ItemStack(ItemRegistry.NOVA.get())
             );
             this.level().addFreshEntity(bookEntity);
             this.droppedBookThisFight = true;
@@ -293,10 +300,8 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
             this.attackCooldown--;
         }
 
-        if (this.retreatLocation == null && !this.level().isClientSide) {
-            this.retreatLocation = this.position();
-            this.homeYRot = this.getYRot();
-        }
+        // Always keep retreat location pinned to (16, 67, 0)
+        this.retreatLocation = HARDCODED_RETREAT_POS;
 
         if (isStatue() || isPausing()) {
             this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
@@ -350,8 +355,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
                 retreatTimer++;
             }
 
-            boolean atHome = this.retreatLocation == null
-                    || this.distanceToSqr(this.retreatLocation) <= HOME_DIST_SQR;
+            boolean atHome = this.distanceToSqr(this.retreatLocation) <= HOME_DIST_SQR;
 
             if ((atHome && retreatTimer >= MIN_RETREAT_TICKS) || retreatTimer >= MAX_RETREAT_TICKS) {
                 snapHome();
@@ -493,8 +497,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         this.setTarget(null);
         this.bossEvent.removeAllPlayers();
 
-        if (this.retreatLocation != null
-                && this.distanceToSqr(this.retreatLocation) > HOME_DIST_SQR) {
+        if (this.distanceToSqr(this.retreatLocation) > HOME_DIST_SQR) {
             this.getNavigation().moveTo(
                     this.retreatLocation.x,
                     this.retreatLocation.y,
@@ -505,7 +508,6 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     }
 
     private void snapHome() {
-        if (this.retreatLocation == null) return;
         this.teleportTo(this.retreatLocation.x, this.retreatLocation.y, this.retreatLocation.z);
         this.setYRot(this.homeYRot);
         this.yBodyRot = this.homeYRot;
@@ -546,7 +548,8 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         controllers.add(new AnimationController<>(this, "statue", 0, this::statuePredicate));
         controllers.add(new AnimationController<>(this, "combat", 5, this::combatPredicate)
                 .triggerableAnim("slash", SLASH)
-                .triggerableAnim("slash", CAST_SPELL)
+                .triggerableAnim("instacast", CAST_SPELL)
+                .triggerableAnim("longcast", LONG_CAST_SPELL)
                 .receiveTriggeredAnimations());
     }
 
@@ -598,11 +601,6 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         tag.putInt("HalfHeartPauseTimer", this.halfHeartPauseTimer);
         tag.putInt("RetreatTimer", this.retreatTimer);
         tag.putFloat("HomeYRot", this.homeYRot);
-        if (this.retreatLocation != null) {
-            tag.putDouble("RetreatX", this.retreatLocation.x);
-            tag.putDouble("RetreatY", this.retreatLocation.y);
-            tag.putDouble("RetreatZ", this.retreatLocation.z);
-        }
     }
 
     @Override
@@ -623,13 +621,7 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
         this.halfHeartPauseTimer = tag.contains("HalfHeartPauseTimer") ? tag.getInt("HalfHeartPauseTimer") : -1;
         this.retreatTimer = tag.contains("RetreatTimer") ? tag.getInt("RetreatTimer") : -1;
         this.homeYRot = tag.getFloat("HomeYRot");
-        if (tag.contains("RetreatX")) {
-            this.retreatLocation = new Vec3(
-                    tag.getDouble("RetreatX"),
-                    tag.getDouble("RetreatY"),
-                    tag.getDouble("RetreatZ")
-            );
-        }
+        this.retreatLocation = HARDCODED_RETREAT_POS;
     }
 
     public class TripleDashSlashGoal extends Goal {
