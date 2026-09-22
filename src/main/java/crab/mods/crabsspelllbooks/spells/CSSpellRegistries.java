@@ -2,6 +2,7 @@ package crab.mods.crabsspelllbooks.spells;
 
 import crab.mods.crabsspelllbooks.spells.Eldritch.MindWipeSpell;
 import crab.mods.crabsspelllbooks.spells.Eldritch.SensoryDeprivationSpell;
+import crab.mods.crabsspelllbooks.spells.blood.SampleSpell;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -22,6 +23,10 @@ public class CSSpellRegistries {
     public static final Supplier<AbstractSpell> SENSORY_DEPRIVATION = registerSpell(new SensoryDeprivationSpell());
 
     public static final Supplier<AbstractSpell> MIND_WIPE = registerSpell(new MindWipeSpell());
+
+    //BLOOD
+
+    public static final Supplier<AbstractSpell> SAMPLE = registerSpell(new SampleSpell());
 
     public static void register(IEventBus eventBus)
     {

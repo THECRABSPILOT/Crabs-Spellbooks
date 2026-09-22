@@ -1,0 +1,122 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.nova_armor",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "armorHead",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 24, -4], "size": [8, 8, 8], "uv": [0, 11]},
+						{"origin": [-4, 23.7, -4], "size": [8, 2.4, 8], "inflate": 0.1, "uv": [40, 0]},
+						{"origin": [-4, 24, -4], "size": [8, 8, 8], "inflate": 0.49, "uv": [32, 27]},
+						{"origin": [-4, 24, -4], "size": [8, 8, 8], "inflate": 0.5, "uv": [0, 27]},
+						{"origin": [-4, 29, 5], "size": [8, 3, 4], "inflate": 0.501, "pivot": [0, 33, 4.4], "rotation": [-27.5, 0, 0], "uv": [64, 26]}
+					]
+				},
+				{
+					"name": "orb",
+					"parent": "armorHead",
+					"pivot": [0, 28, 0],
+					"cubes": [
+						{"origin": [-2, 26, -2], "size": [4, 4, 4], "inflate": -0.5, "uv": [72, 0]}
+					]
+				},
+				{
+					"name": "crown",
+					"parent": "armorHead",
+					"pivot": [0, 30, 0],
+					"rotation": [-10, 0, 0],
+					"cubes": [
+						{"origin": [-5, 30, -5], "size": [10, 1, 10], "inflate": 0.5, "uv": [0, 0]},
+						{"origin": [-1, 30, -5], "size": [2, 2, 1], "inflate": 0.6, "uv": [16, 59]}
+					]
+				},
+				{
+					"name": "stone",
+					"parent": "crown",
+					"pivot": [4.1, 32, -5],
+					"cubes": [
+						{"origin": [3.4, 33, -5], "size": [1, 2, 1], "pivot": [4.1, 32, -5], "rotation": [-17.5, 0, 0], "uv": [44, 61]},
+						{"origin": [-4.6, 33, -5], "size": [1, 2, 1], "pivot": [-3.9, 32, -5], "rotation": [-17.5, 0, 0], "uv": [44, 58]}
+					]
+				},
+				{
+					"name": "stones",
+					"parent": "crown",
+					"pivot": [0.1, 32, -5],
+					"cubes": [
+						{"origin": [-0.6, 33, -5], "size": [1, 5, 1], "pivot": [0.1, 32, -5], "rotation": [-17.5, 0, 0], "uv": [40, 58]}
+					]
+				},
+				{
+					"name": "armorBody",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 12, -2], "size": [8, 12, 4], "uv": [0, 43]},
+						{"origin": [-4, 12, -2], "size": [8, 2, 4], "inflate": 0.24, "uv": [52, 43]},
+						{"origin": [-4, 7, -2], "size": [2, 5, 4], "inflate": 0.245, "pivot": [-5, 12.4, 0], "rotation": [0, 0, 7.5], "uv": [32, 74]},
+						{"origin": [2, 7, -2], "size": [2, 5, 4], "inflate": 0.245, "pivot": [4.3, 12.4, 0], "rotation": [0, 0, -7.5], "uv": [44, 74]},
+						{"origin": [-4, 19, -2], "size": [8, 5, 4], "inflate": 0.28, "uv": [24, 49]},
+						{"origin": [-4, 21, -2], "size": [8, 3, 4], "inflate": 0.3, "uv": [64, 33]},
+						{"origin": [-4, 18, -2], "size": [10, 2, 4], "inflate": 0.23, "pivot": [0, 19, 0], "rotation": [0, 0, 67.5], "uv": [24, 43]}
+					]
+				},
+				{
+					"name": "armorRightArm",
+					"pivot": [-5, 22, 0],
+					"cubes": [
+						{"origin": [-8, 12, -2], "size": [4, 12, 4], "uv": [48, 49]},
+						{"origin": [-8, 12, -2], "size": [4, 5, 4], "inflate": 0.25, "uv": [40, 65]},
+						{"origin": [-8, 21, -2], "size": [4, 3, 4], "inflate": 0.25, "uv": [16, 74]}
+					]
+				},
+				{
+					"name": "armorLeftArm",
+					"pivot": [5, 22, 0],
+					"cubes": [
+						{"origin": [4, 12, -2], "size": [4, 12, 4], "uv": [24, 58]},
+						{"origin": [4, 12, -2], "size": [4, 5, 4], "inflate": 0.25, "uv": [56, 71]},
+						{"origin": [4, 21, -2], "size": [4, 3, 4], "inflate": 0.25, "uv": [72, 71]}
+					]
+				},
+				{
+					"name": "armorRightLeg",
+					"pivot": [-1.9, 12, 0],
+					"cubes": [
+						{"origin": [-3.9, 0, -2], "size": [4, 12, 4], "uv": [0, 59]}
+					]
+				},
+				{
+					"name": "armorLeftLeg",
+					"pivot": [1.9, 12, 0],
+					"cubes": [
+						{"origin": [-0.1, 0, -2], "size": [4, 12, 4], "uv": [64, 10]}
+					]
+				},
+				{
+					"name": "armorRightBoot",
+					"pivot": [-2, 12, 0],
+					"cubes": [
+						{"origin": [-3.9, 0, -2], "size": [4, 7, 4], "inflate": 0.2, "uv": [64, 49]}
+					]
+				},
+				{
+					"name": "armorLeftBoot",
+					"pivot": [2, 12, 0],
+					"cubes": [
+						{"origin": [-0.1, 0, -2], "size": [4, 7, 4], "inflate": 0.2, "uv": [64, 60]}
+					]
+				}
+			]
+		}
+	]
+}

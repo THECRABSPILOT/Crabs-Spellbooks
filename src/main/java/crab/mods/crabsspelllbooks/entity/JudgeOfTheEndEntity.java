@@ -1,6 +1,6 @@
 package crab.mods.crabsspelllbooks.entity;
 
-import crab.mods.crabsspelllbooks.entity.longgoals.JudgeShadowSlashGoal;
+import crab.mods.crabsspelllbooks.entity.goals.JudgeShadowSlashGoal;
 import crab.mods.crabsspelllbooks.registry.ItemRegistry;
 import io.redspace.ironsspellbooks.entity.spells.black_hole.BlackHole;
 import io.redspace.ironsspellbooks.entity.spells.magic_missile.MagicMissileProjectile;
@@ -813,4 +813,14 @@ public class JudgeOfTheEndEntity extends Monster implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }
+
+    @Override
+    public boolean requiresCustomPersistence() {
+        return true;
+    }
+
+    @Override
+    public void checkDespawn() {
+    }
+
 }

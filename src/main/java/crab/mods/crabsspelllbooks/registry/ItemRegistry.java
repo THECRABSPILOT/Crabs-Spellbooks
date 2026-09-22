@@ -70,6 +70,37 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ABYSSALNOVA = ITEMS.register("abyssal_nova",
             ()-> new AbyssalNova());
 
+
+    public static final RegistryObject<Item> JUDGE_HELMET = ITEMS.register("judge_helmet",
+            () -> new JudgeArmorItem(ModArmorMaterials.JUDGE, ArmorItem.Type.HELMET, new Item.Properties()));
+
+    public static final RegistryObject<Item> JUDGE_CHESTPLATE = ITEMS.register("judge_chestplate",
+            () -> new JudgeArmorItem(ModArmorMaterials.JUDGE, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+
+    public static final RegistryObject<Item> JUDGE_LEGGINGS = ITEMS.register("judge_leggings",
+            () -> new JudgeArmorItem(ModArmorMaterials.JUDGE, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+
+    public static final RegistryObject<Item> JUDGE_BOOTS = ITEMS.register("judge_boots",
+            () -> new JudgeArmorItem(ModArmorMaterials.JUDGE, ArmorItem.Type.BOOTS, new Item.Properties()));
+
+
+
+    public static final RegistryObject<Item> MECH_HELMET = ITEMS.register("mech_helmet",
+            () -> new MechArmorItem(ModArmorMaterials.MECH, ArmorItem.Type.HELMET, new Item.Properties()));
+
+    public static final RegistryObject<Item> MECH_CHESTPLATE = ITEMS.register("mech_chestplate",
+            () -> new MechArmorItem(ModArmorMaterials.MECH, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+
+    public static final RegistryObject<Item> MECH_LEGGINGS = ITEMS.register("mech_leggings",
+            () -> new MechArmorItem(ModArmorMaterials.MECH, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+
+    public static final RegistryObject<Item> MECH_BOOTS = ITEMS.register("mech_boots",
+            () -> new MechArmorItem(ModArmorMaterials.MECH, ArmorItem.Type.BOOTS, new Item.Properties()));
+
+
+    public static final RegistryObject<Item> MECHPACK = ITEMS.register("mechanical_jetpack",
+            () -> new MechanicalJetpackItem(new Item.Properties()));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

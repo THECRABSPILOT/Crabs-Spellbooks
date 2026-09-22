@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "curios#ring",
-    "curios#back",
-    "curios#rings",
-    "curios#belt"
+    "#curios:back",
+    "#curios:belt",
+    "#curios:ring",
+    "#curios:rings"
   ]
 }

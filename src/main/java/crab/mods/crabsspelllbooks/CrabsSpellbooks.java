@@ -1,6 +1,7 @@
 package crab.mods.crabsspelllbooks;
 
 import com.mojang.logging.LogUtils;
+import crab.mods.crabsspelllbooks.network.PacketHandler;
 import crab.mods.crabsspelllbooks.registry.BlockRegistry;
 import crab.mods.crabsspelllbooks.registry.EntityRegistry;
 import crab.mods.crabsspelllbooks.registry.ItemRegistry;
@@ -74,6 +75,18 @@ public class CrabsSpellbooks {
                 output.accept(ItemRegistry.HASTUR_CHESTPLATE.get());
                 output.accept(ItemRegistry.HASTUR_LEGGINGS.get());
                 output.accept(ItemRegistry.HASTUR_BOOTS.get());
+
+                output.accept(ItemRegistry.JUDGE_HELMET.get());
+                output.accept(ItemRegistry.JUDGE_CHESTPLATE.get());
+                output.accept(ItemRegistry.JUDGE_LEGGINGS.get());
+                output.accept(ItemRegistry.JUDGE_BOOTS.get());
+
+                output.accept(ItemRegistry.MECH_HELMET.get());
+                output.accept(ItemRegistry.MECH_CHESTPLATE.get());
+                output.accept(ItemRegistry.MECH_LEGGINGS.get());
+                output.accept(ItemRegistry.MECH_BOOTS.get());
+
+
                 output.accept(ItemRegistry.GOLDEN_WEAVE.get());
                 output.accept(ItemRegistry.YELLOW_RUNE.get());
                 output.accept(ItemRegistry.ELDRITCH_UPGRADE_ORB_ITEM.get());
@@ -82,6 +95,8 @@ public class CrabsSpellbooks {
                 output.accept(ItemRegistry.RIFT.get());
                 output.accept(ItemRegistry.NOVA.get());
                 output.accept(ItemRegistry.TOKEN_OF_THE_THIRD.get());
+
+                output.accept(ItemRegistry.MECHPACK.get());
             }).build());
 
     public CrabsSpellbooks() {
@@ -110,7 +125,15 @@ public class CrabsSpellbooks {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+
+
     private void commonSetup(final FMLCommonSetupEvent event) {
+
+        event.enqueueWork(() -> {
+            // Register custom network packets
+            PacketHandler.register();
+        });
+
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
         LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
@@ -136,6 +159,7 @@ public class CrabsSpellbooks {
         LOGGER.info("HELLO from server starting");
     }
 
+
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
@@ -147,6 +171,8 @@ public class CrabsSpellbooks {
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
     }
+
+
 
 
 }
