@@ -1,8 +1,10 @@
 package crab.mods.crabsspelllbooks.entity.mobs.core;
 
-import crab.mods.crabsspelllbooks.entity.mobs.goals.DeathLaserGoal;
-import crab.mods.crabsspelllbooks.entity.mobs.goals.LastPrismGoal;
-import crab.mods.crabsspelllbooks.entity.mobs.goals.MiniLaserAtPlayer;
+import com.github.L_Ender.cataclysm.init.ModEntities;
+import crab.mods.crabsspelllbooks.entity.goals.DeathLaserGoal;
+import crab.mods.crabsspelllbooks.entity.goals.LastPrismGoal;
+import crab.mods.crabsspelllbooks.entity.goals.MiniLaserAtPlayer;
+import crab.mods.crabsspelllbooks.entity.goals.SummonMinionsGoal;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,8 +19,6 @@ import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MechanicalCoreEntity extends PathfinderMob implements GeoEntity {
@@ -43,9 +43,10 @@ public class MechanicalCoreEntity extends PathfinderMob implements GeoEntity {
     protected void registerGoals() {
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
 
-        this.goalSelector.addGoal(1, new DeathLaserGoal(this, 32.0D, 99999));
-        this.goalSelector.addGoal(1, new LastPrismGoal(this, 32.0D, 0));
-        this.goalSelector.addGoal(1, new MiniLaserAtPlayer(this, 32.0D, 99999));
+        //this.goalSelector.addGoal(1, new DeathLaserGoal(this, 32.0D, 99999));
+        this.goalSelector.addGoal(1, new LastPrismGoal(this, 32.0D, 20));
+        this.goalSelector.addGoal(3, new MiniLaserAtPlayer(this, 32.0D, 10));
+        this.goalSelector.addGoal(2, new SummonMinionsGoal(this, 32.0D, ModEntities.THE_WATCHER.get(),5,60));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package crab.mods.crabsspelllbooks.entity.mobs.goals;
+package crab.mods.crabsspelllbooks.entity.goals;
 
 import com.github.L_Ender.cataclysm.entity.projectile.Death_Laser_Beam_Entity;
 import com.github.L_Ender.cataclysm.init.ModEntities;
@@ -23,6 +23,9 @@ public class LastPrismGoal extends Goal {
     private final double attackRangeSqr;
     private final int cooldownTicks;
 
+    // Internal cooldown so any generic mob doesn't spam this attack endlessly
+    private int internalCooldown = 0;
+
     private int attackTimer;
     private final List<Death_Laser_Beam_Entity> beams = new ArrayList<>();
     private final List<ArmorStand> beamCasters = new ArrayList<>();
@@ -43,6 +46,11 @@ public class LastPrismGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        // If the goal is still on cooldown, it cannot be used
+        if (this.internalCooldown > 0) {
+            return false;
+        }
+
         LivingEntity target = this.mob.getTarget();
         if (target instanceof Player player && player.isAlive() && !player.isSpectator()) {
             return this.mob.distanceToSqr(player) <= this.attackRangeSqr
@@ -63,6 +71,11 @@ public class LastPrismGoal extends Goal {
 
     @Override
     public void tick() {
+        // Count down internal cooldown if it's ticking outside of the goal
+        if (this.internalCooldown > 0) {
+            this.internalCooldown--;
+        }
+
         LivingEntity target = this.mob.getTarget();
 
         this.mob.setDeltaMovement(0, this.mob.getDeltaMovement().y, 0);
@@ -97,9 +110,6 @@ public class LastPrismGoal extends Goal {
                         BEAM_DAMAGE,
                         BEAM_HP_DAMAGE
                 );
-
-                // Ensure the beam credits your mob as the owner/shooter if the method exists
-                // beam.setOwner(this.mob);
 
                 beam.setFire(false);
                 this.mob.level().addFreshEntity(beam);
@@ -175,6 +185,9 @@ public class LastPrismGoal extends Goal {
         this.beamCasters.clear();
 
         this.attackTimer = 0;
+
+        // Trigger the internal cooldown so the mob waits before using this goal again
+        this.internalCooldown = this.cooldownTicks;
     }
 
     private static class AlliedArmorStand extends ArmorStand {

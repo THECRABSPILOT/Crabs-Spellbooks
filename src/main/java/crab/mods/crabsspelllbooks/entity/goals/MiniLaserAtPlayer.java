@@ -1,4 +1,4 @@
-package crab.mods.crabsspelllbooks.entity.mobs.goals;
+package crab.mods.crabsspelllbooks.entity.goals;
 
 import com.github.L_Ender.cataclysm.entity.projectile.Laser_Beam_Entity;
 import com.github.L_Ender.cataclysm.init.ModEntities;
@@ -16,6 +16,8 @@ public class MiniLaserAtPlayer extends Goal {
     private final double attackRangeSqr;
     private final int cooldownTicks;
 
+    // Internal cooldown so any generic mob doesn't spam this goal continuously
+    private int internalCooldown = 0;
     private int attackTimer;
 
     public MiniLaserAtPlayer(Mob mob, double attackRange, int cooldownTicks) {
@@ -27,9 +29,15 @@ public class MiniLaserAtPlayer extends Goal {
 
     @Override
     public boolean canUse() {
+        // If the goal is still on cooldown, it cannot be used
+        if (this.internalCooldown > 0) {
+            return false;
+        }
+
         LivingEntity target = this.mob.getTarget();
         if (target instanceof Player player && player.isAlive() && !player.isSpectator()) {
-            return this.mob.distanceToSqr(player) <= this.attackRangeSqr && this.mob.getSensing().hasLineOfSight(player);
+            return this.mob.distanceToSqr(player) <= this.attackRangeSqr
+                    && this.mob.getSensing().hasLineOfSight(player);
         }
         return false;
     }
@@ -41,6 +49,11 @@ public class MiniLaserAtPlayer extends Goal {
 
     @Override
     public void tick() {
+        // Count down internal cooldown if ticking outside active use
+        if (this.internalCooldown > 0) {
+            this.internalCooldown--;
+        }
+
         LivingEntity target = this.mob.getTarget();
         if (target == null) return;
 
@@ -52,6 +65,9 @@ public class MiniLaserAtPlayer extends Goal {
                 shootLaserBeams(target);
             }
             this.attackTimer = 0;
+
+            // Trigger internal cooldown after firing
+            this.internalCooldown = 40; // Adjust recovery ticks between mini-laser bursts if desired
         }
     }
 
