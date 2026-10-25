@@ -1,8 +1,7 @@
-package crab.mods.crabsspelllbooks.entity.goals;
+package crab.mods.crabsspelllbooks.entity.mobs.goals;
 
 import com.github.L_Ender.cataclysm.entity.projectile.Laser_Beam_Entity;
 import com.github.L_Ender.cataclysm.init.ModEntities;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -11,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
-public class FireAtPlayerGoal extends Goal {
+public class MiniLaserAtPlayer extends Goal {
 
     private final Mob mob;
     private final double attackRangeSqr;
@@ -19,7 +18,7 @@ public class FireAtPlayerGoal extends Goal {
 
     private int attackTimer;
 
-    public FireAtPlayerGoal(Mob mob, double attackRange, int cooldownTicks) {
+    public MiniLaserAtPlayer(Mob mob, double attackRange, int cooldownTicks) {
         this.mob = mob;
         this.attackRangeSqr = attackRange * attackRange;
         this.cooldownTicks = cooldownTicks;

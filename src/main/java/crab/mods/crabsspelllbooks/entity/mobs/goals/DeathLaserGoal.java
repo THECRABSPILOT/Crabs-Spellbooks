@@ -1,4 +1,4 @@
-package crab.mods.crabsspelllbooks.entity.goals;
+package crab.mods.crabsspelllbooks.entity.mobs.goals;
 
 import com.github.L_Ender.cataclysm.entity.projectile.Death_Laser_Beam_Entity;
 import com.github.L_Ender.cataclysm.init.ModEntities;

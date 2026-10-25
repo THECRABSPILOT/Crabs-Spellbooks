@@ -1,6 +1,6 @@
-package crab.mods.crabsspelllbooks.entity;
+package crab.mods.crabsspelllbooks.entity.mobs.judge;
 
-import crab.mods.crabsspelllbooks.entity.goals.JudgeShadowSlashGoal;
+import crab.mods.crabsspelllbooks.entity.mobs.goals.JudgeShadowSlashGoal;
 import crab.mods.crabsspelllbooks.registry.ItemRegistry;
 import io.redspace.ironsspellbooks.entity.spells.black_hole.BlackHole;
 import io.redspace.ironsspellbooks.entity.spells.magic_missile.MagicMissileProjectile;

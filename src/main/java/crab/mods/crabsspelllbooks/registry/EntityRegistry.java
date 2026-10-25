@@ -1,8 +1,8 @@
 package crab.mods.crabsspelllbooks.registry;
 
 import crab.mods.crabsspelllbooks.CrabsSpellbooks;
-import crab.mods.crabsspelllbooks.entity.JudgeOfTheEndEntity;
-import crab.mods.crabsspelllbooks.entity.MechanicalCoreEntity;
+import crab.mods.crabsspelllbooks.entity.mobs.judge.JudgeOfTheEndEntity;
+import crab.mods.crabsspelllbooks.entity.mobs.core.MechanicalCoreEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -12,13 +12,12 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class EntityRegistry {
 
-    // Fixed DeferredRegister generic type to EntityType<?>
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, CrabsSpellbooks.MODID);
 
     public static final RegistryObject<EntityType<JudgeOfTheEndEntity>> JUDGE_OF_THE_END =
             ENTITY_TYPES.register("judge_of_the_end", () ->
-                    EntityType.Builder.of(JudgeOfTheEndEntity::new, MobCategory.MONSTER)
+                    EntityType.Builder.<JudgeOfTheEndEntity>of(JudgeOfTheEndEntity::new, MobCategory.MONSTER)
                             .sized(1.6f, 5.0f)
                             .clientTrackingRange(8)
                             .build("judge_of_the_end")
@@ -26,7 +25,7 @@ public class EntityRegistry {
 
     public static final RegistryObject<EntityType<MechanicalCoreEntity>> MECHANICAL_CORE  =
             ENTITY_TYPES.register("mechanical_core", () ->
-                    EntityType.Builder.of(MechanicalCoreEntity::new, MobCategory.MONSTER)
+                    EntityType.Builder.<MechanicalCoreEntity>of(MechanicalCoreEntity::new, MobCategory.MONSTER)
                             .sized(1.6f, 2.0f)
                             .clientTrackingRange(500)
                             .build("mechanical_core")

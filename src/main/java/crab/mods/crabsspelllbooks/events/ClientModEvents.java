@@ -1,14 +1,12 @@
 package crab.mods.crabsspelllbooks.events;
 
-import com.github.L_Ender.cataclysm.init.ModItems;
 import crab.mods.crabsspelllbooks.CrabsSpellbooks;
 import crab.mods.crabsspelllbooks.blocks.RiftBlockRenderer;
 import crab.mods.crabsspelllbooks.client.BeamBlockEntityRenderer;
 import crab.mods.crabsspelllbooks.client.model.HasturSetModel;
 import crab.mods.crabsspelllbooks.client.model.ModModelLayers;
-import crab.mods.crabsspelllbooks.entity.renderer.JudgeOfTheEndRenderer;
-import crab.mods.crabsspelllbooks.entity.renderer.MechanicalCoreRenderer;
-import crab.mods.crabsspelllbooks.items.model.MechanicalJetpackModel;
+import crab.mods.crabsspelllbooks.entity.mobs.judge.JudgeOfTheEndRenderer;
+import crab.mods.crabsspelllbooks.entity.mobs.core.MechanicalCoreRenderer;
 import crab.mods.crabsspelllbooks.items.renderer.MechanicalJetpackRenderer;
 import crab.mods.crabsspelllbooks.registry.BlockRegistry;
 import crab.mods.crabsspelllbooks.registry.EntityRegistry;
@@ -16,7 +14,6 @@ import crab.mods.crabsspelllbooks.registry.ItemRegistry;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

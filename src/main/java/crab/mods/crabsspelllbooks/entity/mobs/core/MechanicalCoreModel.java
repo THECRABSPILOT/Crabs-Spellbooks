@@ -1,7 +1,5 @@
-package crab.mods.crabsspelllbooks.entity.model;
+package crab.mods.crabsspelllbooks.entity.mobs.core;
 
-import crab.mods.crabsspelllbooks.entity.JudgeOfTheEndEntity;
-import crab.mods.crabsspelllbooks.entity.MechanicalCoreEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

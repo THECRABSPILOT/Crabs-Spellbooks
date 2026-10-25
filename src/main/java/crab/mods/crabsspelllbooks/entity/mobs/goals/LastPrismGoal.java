@@ -1,4 +1,4 @@
-package crab.mods.crabsspelllbooks.entity.goals;
+package crab.mods.crabsspelllbooks.entity.mobs.goals;
 
 import com.github.L_Ender.cataclysm.entity.projectile.Death_Laser_Beam_Entity;
 import com.github.L_Ender.cataclysm.init.ModEntities;
@@ -81,6 +81,7 @@ public class LastPrismGoal extends Goal {
                 caster.setNoGravity(true);
                 caster.setSilent(true);
                 caster.setInvulnerable(true);
+                caster.setCustomName(this.mob.getDisplayName());
                 this.mob.level().addFreshEntity(caster);
                 this.beamCasters.add(caster);
 
@@ -96,6 +97,10 @@ public class LastPrismGoal extends Goal {
                         BEAM_DAMAGE,
                         BEAM_HP_DAMAGE
                 );
+
+                // Ensure the beam credits your mob as the owner/shooter if the method exists
+                // beam.setOwner(this.mob);
+
                 beam.setFire(false);
                 this.mob.level().addFreshEntity(beam);
                 this.beams.add(beam);

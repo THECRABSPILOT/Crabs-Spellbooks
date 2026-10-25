@@ -1,9 +1,7 @@
-package crab.mods.crabsspelllbooks.entity.renderer;
+package crab.mods.crabsspelllbooks.entity.mobs.core;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import crab.mods.crabsspelllbooks.entity.MechanicalCoreEntity;
-import crab.mods.crabsspelllbooks.entity.model.MechanicalCoreModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.cache.object.BakedGeoModel;

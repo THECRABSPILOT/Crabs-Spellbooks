@@ -1,4 +1,4 @@
-package crab.mods.crabsspelllbooks.entity.goals;
+package crab.mods.crabsspelllbooks.entity.mobs.goals;
 
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;

@@ -1,8 +1,8 @@
-package crab.mods.crabsspelllbooks.entity;
+package crab.mods.crabsspelllbooks.entity.mobs.core;
 
-import crab.mods.crabsspelllbooks.entity.goals.DeathLaserGoal;
-import crab.mods.crabsspelllbooks.entity.goals.FireAtPlayerGoal;
-import crab.mods.crabsspelllbooks.entity.goals.LastPrismGoal;
+import crab.mods.crabsspelllbooks.entity.mobs.goals.DeathLaserGoal;
+import crab.mods.crabsspelllbooks.entity.mobs.goals.LastPrismGoal;
+import crab.mods.crabsspelllbooks.entity.mobs.goals.MiniLaserAtPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,9 +43,9 @@ public class MechanicalCoreEntity extends PathfinderMob implements GeoEntity {
     protected void registerGoals() {
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
 
-        this.goalSelector.addGoal(1, new DeathLaserGoal(this, 32.0D, 60));
-        this.goalSelector.addGoal(1, new LastPrismGoal(this, 32.0D, 40));
-        this.goalSelector.addGoal(1, new FireAtPlayerGoal(this, 32.0D, 30));
+        this.goalSelector.addGoal(1, new DeathLaserGoal(this, 32.0D, 99999));
+        this.goalSelector.addGoal(1, new LastPrismGoal(this, 32.0D, 0));
+        this.goalSelector.addGoal(1, new MiniLaserAtPlayer(this, 32.0D, 99999));
     }
 
     @Override
@@ -110,9 +110,10 @@ public class MechanicalCoreEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "look", 0, state ->
+       /* controllers.add(new AnimationController<>(this, "look", 0, state ->
                 state.setAndContinue(RawAnimation.begin().thenLoop("animation.mechanical_core.look"))
         ));
+        */
     }
 
     @Override
