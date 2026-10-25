@@ -7,6 +7,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +31,20 @@ public class ClientEvents {
                     event.getOverlay().id().equals(VanillaGuiOverlay.ARMOR_LEVEL.id())) {
                 event.setCanceled(true);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderBossBar(CustomizeGuiOverlayEvent.BossEventProgress event) {
+        // Check if the boss bar matches your custom boss name
+        if (event.getBossEvent().getName().getString().equals("§5§1~ JUDGE OF THE END ~")) {
+            event.setCanceled(true);
+
+
+        } else if (event.getBossEvent().getName().getString().equals("§4 THE MECHANICAL CORE")) {
+            event.setCanceled(true);
+
+
         }
     }
 

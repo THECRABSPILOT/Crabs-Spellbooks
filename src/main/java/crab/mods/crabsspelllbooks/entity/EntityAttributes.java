@@ -2,6 +2,8 @@ package crab.mods.crabsspelllbooks.entity;
 
 import crab.mods.crabsspelllbooks.CrabsSpellbooks;
 import crab.mods.crabsspelllbooks.registry.EntityRegistry;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -20,6 +22,16 @@ public class EntityAttributes {
                         .add(Attributes.ATTACK_DAMAGE, 8.0D)
                         .add(Attributes.FOLLOW_RANGE, 64.0D)
                         .add(Attributes.KNOCKBACK_RESISTANCE, 100.0D)
+                        .build()
+        );
+
+        event.put(EntityRegistry.MECHANICAL_CORE.get(),
+                PathfinderMob.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 2500.0D)
+                        .add(Attributes.FLYING_SPEED, 0.0D)
+                        .add(Attributes.MOVEMENT_SPEED, 0.0D)
+                        .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D)
+                        .add(Attributes.FOLLOW_RANGE, 64.0D)
                         .build()
         );
     }

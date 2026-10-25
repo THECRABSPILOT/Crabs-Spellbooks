@@ -1,0 +1,23 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.mechanical_core.idle": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"head": {
+					"rotation": [0, 0, 0]
+				}
+			}
+		},
+		"animation.mechanical_core.look": {
+			"loop": true,
+			"animation_length": 0.05,
+			"bones": {
+				"head": {
+					"rotation": ["query.target_x_rotation", "query.target_y_rotation", 0]
+				}
+			}
+		}
+	}
+}

@@ -2,6 +2,7 @@ package crab.mods.crabsspelllbooks.registry;
 
 import crab.mods.crabsspelllbooks.CrabsSpellbooks;
 import crab.mods.crabsspelllbooks.entity.JudgeOfTheEndEntity;
+import crab.mods.crabsspelllbooks.entity.MechanicalCoreEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,6 +22,14 @@ public class EntityRegistry {
                             .sized(1.6f, 5.0f)
                             .clientTrackingRange(8)
                             .build("judge_of_the_end")
+            );
+
+    public static final RegistryObject<EntityType<MechanicalCoreEntity>> MECHANICAL_CORE  =
+            ENTITY_TYPES.register("mechanical_core", () ->
+                    EntityType.Builder.of(MechanicalCoreEntity::new, MobCategory.MONSTER)
+                            .sized(1.6f, 2.0f)
+                            .clientTrackingRange(500)
+                            .build("mechanical_core")
             );
 
     public static void register(IEventBus eventBus) {

@@ -7,6 +7,7 @@ import crab.mods.crabsspelllbooks.client.BeamBlockEntityRenderer;
 import crab.mods.crabsspelllbooks.client.model.HasturSetModel;
 import crab.mods.crabsspelllbooks.client.model.ModModelLayers;
 import crab.mods.crabsspelllbooks.entity.renderer.JudgeOfTheEndRenderer;
+import crab.mods.crabsspelllbooks.entity.renderer.MechanicalCoreRenderer;
 import crab.mods.crabsspelllbooks.items.model.MechanicalJetpackModel;
 import crab.mods.crabsspelllbooks.items.renderer.MechanicalJetpackRenderer;
 import crab.mods.crabsspelllbooks.registry.BlockRegistry;
@@ -51,6 +52,7 @@ public class ClientModEvents {
                 BeamBlockEntityRenderer::new
         );
         event.registerBlockEntityRenderer(BlockRegistry.RIFT_BLOCK_ENTITY.get(), RiftBlockRenderer::new);
+        event.registerEntityRenderer(EntityRegistry.MECHANICAL_CORE.get(), MechanicalCoreRenderer::new);
     }
 
     @SubscribeEvent
